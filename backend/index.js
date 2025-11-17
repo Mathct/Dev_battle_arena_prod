@@ -183,6 +183,7 @@ let buzzedPlayer = null;
 let buzzersEnabled = false; // État global des buzzers
 let serverCountdown = 0;
 let countdownInterval = null;
+let countdownStartAt = null;
 
 // Fonction pour vérifier si un joueur est dans une équipe
 async function isPlayerInTeam(playerName) {
@@ -373,6 +374,11 @@ io.on('connection', (socket) => {
       return;
     }
 
+     if (countdownStartAt && Date.now() - countdownStartAt < 100) {
+      console.log(`🚫 Buzz trop rapide ignoré (<50ms) par ${socket.id}`);
+      return;
+    }
+
     // Trouver le joueur par socket.id
     const player = Array.from(players.values()).find(p => p.id === socket.id);
     if (player && !player.buzzed) {
@@ -495,8 +501,10 @@ io.on('connection', (socket) => {
     
     // Gérer le chrono côté serveur
     if (data.enabled) {
+      countdownStartAt = Date.now();
       startServerCountdown(5.0); // Démarrer le chrono de 5 secondes
     } else {
+      countdownStartAt = null;
       stopServerCountdown(); // Arrêter le chrono
     }
     
