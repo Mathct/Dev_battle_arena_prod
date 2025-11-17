@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router";
 import useAutoLogout from "../hooks/useAutoLogout";
 import AutoLogoutWarning from "../components/AutoLogoutWarning";
@@ -170,6 +170,53 @@ function TeamsPage() {
     }
   };
 
+  // Fonction pour tout réinitialiser (équipes, buzzers, scores)
+  const resetAll = async () => {
+    const confirmed = window.confirm(
+      '⚠️ ATTENTION : Cette action va :\n' +
+      '• Vider toutes les équipes\n' +
+      '• Débloquer tous les buzzers\n' +
+      '• Réinitialiser les scores à 0\n\n' +
+      'Êtes-vous sûr de vouloir continuer ?'
+    );
+    
+    if (!confirmed) return;
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('❌ Token manquant');
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/api/auth/reset-all`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        console.log('✅ Réinitialisation complète effectuée:', data.message);
+        // Vider les équipes locales
+        setTeam1([]);
+        setTeam2([]);
+      } else {
+        console.error('❌ Erreur lors de la réinitialisation:', data.message);
+        alert('❌ Erreur lors de la réinitialisation: ' + data.message);
+      }
+    } catch (error) {
+      console.error('❌ Erreur lors de la requête:', error);
+      alert('❌ Erreur lors de la réinitialisation');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
@@ -188,6 +235,15 @@ function TeamsPage() {
   const goToAdmin = () => {
     navigate('/admin');
   };
+
+  // Liste dérivée: utilisateurs non assignés (n'apparaissent pas dans team1 ni team2)
+  const unassignedUsers = useMemo(() => {
+    const assignedIds = new Set([
+      ...team1.map(p => p.id),
+      ...team2.map(p => p.id),
+    ]);
+    return registeredUsers.filter(u => !assignedIds.has(u.id));
+  }, [registeredUsers, team1, team2]);
 
   return (
     <>
@@ -214,13 +270,23 @@ function TeamsPage() {
             </div>
 
             <div className="teams-controls">
+            <div className="teams-controls-spacer"></div>
               <button 
                 onClick={validateTeams} 
                 className="teams-btn validate-btn"
                 disabled={isLoading}
               >
-                {isLoading ? 'Validation...' : '✅ Valider les équipes'}
+                {isLoading ? 'Sauvegarde...' : '✅ Sauvegarder les équipes'}
               </button>
+              <div className="teams-controls-right">
+                <button 
+                  onClick={resetAll} 
+                  className="teams-btn reset-all-btn"
+                  disabled={isLoading}
+                >
+                  🔄 Tout réinitialiser
+                </button>
+              </div>
             </div>
 
             {/* Structure des 3 cartes */}
@@ -253,32 +319,29 @@ function TeamsPage() {
               {/* Carte Liste des utilisateurs - Centre */}
               <div className="team-card users-list">
                 <div className="team-header">
-                  <h2>Utilisateurs Inscrits</h2>
-                  <span className="team-count">{registeredUsers.length} utilisateurs</span>
+                  <h2>Joueurs non assignés</h2>
                 </div>
                 <div className="team-players">
-                  {registeredUsers.length === 0 ? (
-                    <p className="empty-team">Aucun utilisateur inscrit</p>
+                  {unassignedUsers.length === 0 ? (
+                    <p className="empty-team">Aucun joueur non assigné</p>
                   ) : (
-                    registeredUsers.map((user) => (
+                    unassignedUsers.map((user) => (
                       <div key={user.id} className="player-item">
                         <div className="player-info">
                           <span className="player-name">{user.username}</span>
                         </div>
                         <div className="player-actions">
                           <button 
-                            className={`assign-btn team1-btn ${team1.find(player => player.id === user.id) ? 'assigned' : ''}`}
+                            className="assign-btn team1-btn"
                             onClick={() => assignUserToTeam(user.id, 1)}
-                            disabled={team1.find(player => player.id === user.id)}
                           >
-                            {team1.find(player => player.id === user.id) ? '✓ Équipe 1' : 'Équipe 1'}
+                            Équipe 1
                           </button>
                           <button 
-                            className={`assign-btn team2-btn ${team2.find(player => player.id === user.id) ? 'assigned' : ''}`}
+                            className="assign-btn team2-btn"
                             onClick={() => assignUserToTeam(user.id, 2)}
-                            disabled={team2.find(player => player.id === user.id)}
                           >
-                            {team2.find(player => player.id === user.id) ? '✓ Équipe 2' : 'Équipe 2'}
+                            Équipe 2
                           </button>
                         </div>
                       </div>

@@ -583,6 +583,85 @@ router.delete('/clear-buzzes', async (req, res) => {
   }
 });
 
+// Route pour tout réinitialiser (équipes, buzzers, scores)
+router.post('/reset-all', async (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(' ')[1];
+
+    if (!token) {
+      return res.status(401).json({
+        success: false,
+        message: 'Token d\'authentification requis'
+      });
+    }
+
+    // Vérifier le token et le rôle admin
+    const decoded = jwt.verify(token, JWT_SECRET);
+    
+    // Récupérer les informations de l'utilisateur pour vérifier son rôle
+    const [users] = await pool.execute(
+      'SELECT id, username, email, role FROM users WHERE id = ?',
+      [decoded.userId]
+    );
+
+    if (users.length === 0) {
+      return res.status(401).json({
+        success: false,
+        message: 'Utilisateur non trouvé'
+      });
+    }
+
+    const currentUser = users[0];
+    
+    // Vérifier que l'utilisateur est admin
+    if (currentUser.role !== 'admin') {
+      return res.status(403).json({
+        success: false,
+        message: 'Accès refusé - Rôle administrateur requis'
+      });
+    }
+
+    // Commencer une transaction
+    const connection = await pool.getConnection();
+    await connection.beginTransaction();
+
+    try {
+      // 1. Vider les équipes
+      await connection.execute('DELETE FROM teams');
+      console.log('✅ Table teams vidée');
+      
+      // 2. Débloquer tous les buzzers (vider playerbuzz)
+      await connection.execute('DELETE FROM playerbuzz');
+      console.log('✅ Table playerbuzz vidée');
+      
+      // 3. Réinitialiser les scores à 0
+      await connection.execute('UPDATE scores SET score = 0 WHERE team_name = ? OR team_name = ?', ['team1', 'team2']);
+      console.log('✅ Scores réinitialisés à 0');
+      
+      // Valider la transaction
+      await connection.commit();
+      connection.release();
+      
+      res.json({ 
+        success: true, 
+        message: 'Réinitialisation complète effectuée avec succès (équipes, buzzers, scores)' 
+      });
+    } catch (error) {
+      // En cas d'erreur, annuler la transaction
+      await connection.rollback();
+      connection.release();
+      throw error;
+    }
+
+  } catch (error) {
+    console.error('Erreur lors de la réinitialisation complète:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Erreur serveur lors de la réinitialisation complète'
+    });
+  }
+});
+
 // Route pour bloquer un joueur spécifique (ajouter à la table playerbuzz)
 router.post('/lock-player/:username', async (req, res) => {
   try {

@@ -65,25 +65,28 @@ function Header({ user, onLogout, onReturnHome, isConnected, buzzerNotification,
         </div>
       )}
       
-      {/* Debug: Afficher la valeur du countdown */}
-      {console.log("Header - countdown:", countdown, "buzzerControl:", buzzerControl)}
+      
       
       {/* Contrôle buzzer pour l'admin au centre */}
       {buzzerControl && buzzerControl.gameState === 1 && !buzzerControl.buzzedPlayer && (
         <div className="admin-buzzer-control">
-          {buzzerControl.countdown > 0 && buzzerControl.enabled && (
-            <div className="countdown-display">
-              <span className="countdown-text">
-                {buzzerControl.countdown.toFixed(2)}
-              </span>
-            </div>
-          )}
           <button 
             onClick={buzzerControl.onToggle} 
             className={`admin-buzzer-btn ${buzzerControl.enabled ? 'enabled' : 'disabled'}`}
           >
             {buzzerControl.enabled ? 'STOP' : 'GO CHRONO'}
           </button>
+        </div>
+      )}
+
+      {/* Overlay plein écran du chrono pour l'admin */}
+      {buzzerControl && buzzerControl.gameState === 1 && !buzzerControl.buzzedPlayer && buzzerControl.enabled && buzzerControl.countdown > 0 && (
+        <div className="admin-countdown-overlay" aria-hidden="true">
+          <div className="admin-countdown-overlay-inner">
+            <span className="admin-countdown-text">
+              {buzzerControl.countdown.toFixed(2)}
+            </span>
+          </div>
         </div>
       )}
       

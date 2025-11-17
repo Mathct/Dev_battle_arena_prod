@@ -97,6 +97,17 @@
 }
 
 
+/* Nom de l'équipe */
+.team-name-display {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+  color: #4ecdc4;
+  font-family: 'Orbitron', monospace;
+  text-shadow: 0 0 10px rgba(78, 205, 196, 0.5);
+  text-align: center;
+  font-weight: 600;
+}
+
 /* Titre du buzzer */
 .buzzer-title {
   font-size: 2.5rem;

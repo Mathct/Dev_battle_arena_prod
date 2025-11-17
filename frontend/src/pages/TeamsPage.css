@@ -50,8 +50,20 @@
 
 .teams-controls {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
   margin-bottom: 20px;
+}
+
+.teams-controls-spacer {
+  flex: 1;
+}
+
+.teams-controls-right {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .teams-btn {
@@ -90,7 +102,6 @@
 .validate-btn {
   background: linear-gradient(45deg, #2ecc71, #27ae60);
   box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
-  margin-right: 15px;
 }
 
 .validate-btn:hover {
@@ -98,6 +109,23 @@
 }
 
 .validate-btn:disabled {
+  background: linear-gradient(45deg, #95a5a6, #7f8c8d);
+  box-shadow: 0 4px 15px rgba(149, 165, 166, 0.3);
+  cursor: not-allowed;
+  transform: none;
+}
+
+.reset-all-btn {
+  background: linear-gradient(45deg, #e74c3c, #c0392b);
+  box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+}
+
+.reset-all-btn:hover {
+  background: linear-gradient(45deg, #c0392b, #a93226) !important;
+  box-shadow: 0 6px 20px rgba(231, 76, 60, 0.5);
+}
+
+.reset-all-btn:disabled {
   background: linear-gradient(45deg, #95a5a6, #7f8c8d);
   box-shadow: 0 4px 15px rgba(149, 165, 166, 0.3);
   cursor: not-allowed;
@@ -183,6 +211,11 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+/* Centrer le titre du bloc des non assignés */
+.users-list .team-header {
+  justify-content: center;
+}
+
 .team-header h2 {
   color: #fff;
   font-family: 'Orbitron', monospace;
@@ -205,9 +238,16 @@
 }
 
 .team-players {
-  max-height: 400px;
   overflow-y: auto;
   padding-right: 5px;
+}
+
+/* Affichage en 2 colonnes pour les équipes 1 et 2 */
+.team-1 .team-players,
+.team-2 .team-players {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
 }
 
 .team-players::-webkit-scrollbar {
@@ -237,6 +277,12 @@
   margin-bottom: 10px;
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Pour les équipes 1 et 2, retirer margin-bottom car gap gère l'espacement */
+.team-1 .player-item,
+.team-2 .player-item {
+  margin-bottom: 0;
 }
 
 .player-item:hover {
@@ -303,26 +349,7 @@
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
 }
 
-.assign-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.assign-btn:disabled:hover {
-  transform: none;
-  box-shadow: none;
-}
-
-.assign-btn.assigned {
-  background: linear-gradient(45deg, #27ae60, #2ecc71);
-  border: 2px solid #2ecc71;
-}
-
-.assign-btn.assigned:disabled {
-  background: linear-gradient(45deg, #27ae60, #2ecc71);
-  opacity: 0.8;
-}
+/* styles d'état assigné/désactivé inutilisés supprimés */
 
 .remove-player-btn {
   background: linear-gradient(45deg, #ff4757, #c44569);
@@ -354,6 +381,12 @@
   background: rgba(255, 255, 255, 0.03);
   border-radius: 8px;
   border: 1px dashed rgba(255, 255, 255, 0.2);
+}
+
+/* Pour les équipes 1 et 2, le message "Aucun joueur assigné" prend toute la largeur */
+.team-1 .empty-team,
+.team-2 .empty-team {
+  grid-column: 1 / -1;
 }
 
 /* Responsive */

@@ -39,6 +39,9 @@ function GamePage() {
   const [isInTeam, setIsInTeam] = useState(false);
   const [isLocked, setIsLocked] = useState(false);
   const [teamStatusChecked, setTeamStatusChecked] = useState(false);
+  const [teamName, setTeamName] = useState(null); // 'team1' ou 'team2'
+  
+  
   
   // Hook de déconnexion automatique (30 minutes d'inactivité, avertissement à 25 minutes)
   const { showWarning, warningCountdown, handleStayConnected, handleLogoutNow } = useAutoLogout(30, 5);
@@ -126,6 +129,7 @@ function GamePage() {
     // Écouter le statut d'équipe
     socket.on("teamStatus", (data) => {
       setIsInTeam(data.isInTeam);
+      setTeamName(data.teamName || null);
       setTeamStatusChecked(true);
     });
 
@@ -142,6 +146,7 @@ function GamePage() {
     // Écouter la réponse du statut d'équipe
     socket.on("teamStatusResponse", (data) => {
       setIsInTeam(data.isInTeam);
+      setTeamName(data.teamName || null);
       setTeamStatusChecked(true);
     });
 
@@ -221,6 +226,28 @@ function GamePage() {
     }
     return () => clearInterval(interval);
   }, [countdown]);
+
+  // Écouter les changements dans localStorage pour les noms d'équipe (pour mettre à jour l'affichage)
+  useEffect(() => {
+    const handleStorageChange = () => {
+      // Forcer un re-render pour mettre à jour le nom de l'équipe affiché
+      // Le composant se mettra à jour automatiquement via getTeamDisplayName() qui lit depuis localStorage
+      setTeamName(prev => prev);
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    
+    // Vérifier périodiquement les changements (pour les mêmes onglets/fenêtres)
+    // Force un re-render périodiquement pour mettre à jour si les noms d'équipe changent
+    const interval = setInterval(() => {
+      setTeamName(prev => prev);
+    }, 1000);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      clearInterval(interval);
+    };
+  }, [teamName]);
 
   // Rejoindre automatiquement quand l'utilisateur est défini et connecté
   useEffect(() => {
@@ -332,6 +359,17 @@ function GamePage() {
     navigate('/');
   };
 
+  // Fonction pour obtenir le nom d'affichage de l'équipe
+  const getTeamDisplayName = () => {
+    if (!teamName) return null;
+    
+    // Récupérer les noms personnalisés depuis localStorage
+    const team1Name = localStorage.getItem('team1Name') || 'Équipe 1';
+    const team2Name = localStorage.getItem('team2Name') || 'Équipe 2';
+    
+    return teamName === 'team1' ? team1Name : team2Name;
+  };
+
   return (
     <>
       <AutoLogoutWarning
@@ -369,6 +407,9 @@ function GamePage() {
                 </div>
               ) : (
                 <>
+                {getTeamDisplayName() && (
+                    <h3 className="team-name-display">{getTeamDisplayName()}</h3>
+                  )}
                   <h2 className="buzzer-title">Votre Buzzer</h2>
                   <button 
                     onClick={buzz}

@@ -146,6 +146,27 @@
   font-family: 'Orbitron', monospace;
   font-size: 1.6rem;
   margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.team-buzzed-bell {
+  font-size: 1.8rem;
+  animation: bell-ring 0.5s ease-in-out infinite;
+  display: inline-block;
+}
+
+@keyframes bell-ring {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-10deg);
+  }
+  75% {
+    transform: rotate(10deg);
+  }
 }
 
 .score-display {
@@ -186,6 +207,36 @@
 
 .score-btn:hover {
   background: rgba(255, 255, 255, 0.3);
+}
+
+.team-actions-header {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.unlock-team-btn {
+  background: linear-gradient(45deg, #f39c12, #e67e22);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-family: 'Orbitron', monospace;
+  font-weight: bold;
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 15px rgba(243, 156, 18, 0.3);
+  transition: all 0.3s ease;
+}
+
+.unlock-team-btn:hover {
+  background: linear-gradient(45deg, #e67e22, #f39c12);
+  box-shadow: 0 6px 20px rgba(243, 156, 18, 0.4);
+  transform: translateY(-2px);
 }
 
 .score-btn.plus {
@@ -431,7 +482,7 @@
   font-weight: bold;
   font-size: 0.85rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 0.2px;
   line-height: 1.0;
@@ -446,7 +497,7 @@
   font-weight: bold;
   font-size: 0.85rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 0.2px;
   line-height: 1.0;
@@ -485,6 +536,28 @@
   background: linear-gradient(45deg, #c0392b, #e74c3c);
 }
 
+.buzzer-toggle-btn:focus,
+.buzzer-toggle-btn:focus-visible,
+.stop-game-btn:focus,
+.stop-game-btn:focus-visible,
+.start-game-btn:focus,
+.start-game-btn:focus-visible,
+.reset-button:focus,
+.reset-button:focus-visible,
+.validate-response-btn:focus,
+.validate-response-btn:focus-visible,
+.reject-response-btn:focus,
+.reject-response-btn:focus-visible,
+.teams-btn:focus,
+.teams-btn:focus-visible,
+.reset-scores-btn:focus,
+.reset-scores-btn:focus-visible,
+.clear-buzzes-btn:focus,
+.clear-buzzes-btn:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
 .game-controls-active {
   display: flex;
   gap: 15px;
@@ -514,7 +587,7 @@
   font-weight: bold;
   font-size: 0.85rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 0.2px;
   line-height: 1.0;
@@ -704,35 +777,33 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  transition: all 0.3s ease;
+  transition: none;
   border-left: 4px solid #4ecdc4;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+  box-shadow: none;
 }
 
 .player-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
-  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  transform: none;
+  box-shadow: none;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
 .player-item.buzzed {
   background: linear-gradient(135deg, #ff6b6b, #ee5a24);
   border-left-color: #ffd700;
-  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
-  animation: pulse 2s infinite;
+  box-shadow: none;
+  animation: none;
+  transition: none;
 }
 
-@keyframes pulse {
-  0% {
-    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
-  }
-  50% {
-    box-shadow: 0 4px 25px rgba(255, 107, 107, 0.6);
-  }
-  100% {
-    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
-  }
+/* Désactiver tout effet au survol pour l'état buzzed */
+.player-item.buzzed:hover {
+  transform: none;
+  box-shadow: none;
+  background: linear-gradient(135deg, #ff6b6b, #ee5a24);
 }
+
+/* keyframes inutilisés supprimés */
 
 .player-name {
   color: white;
