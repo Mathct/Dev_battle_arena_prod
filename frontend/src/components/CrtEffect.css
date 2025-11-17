@@ -1,0 +1,196 @@
+/* Effet de vieille télé cathodique (CRT) */
+.crt-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+  background: transparent;
+}
+
+/* Traits verticaux qui défilent de haut en bas */
+.vertical-scan-lines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.scan-line {
+  position: absolute;
+  width: 3px;
+  height: 100%;
+  background: linear-gradient(
+    0deg,
+    transparent 0%,
+    rgba(201, 39, 49, 0.5) 20%,
+    rgba(201, 39, 49, 0.8) 50%,
+    rgba(201, 39, 49, 0.5) 80%,
+    transparent 100%
+  );
+  box-shadow: 0 0 10px rgba(201, 39, 49, 0.6);
+  animation: verticalScan 2s linear infinite, opacityFlicker 3s ease-in-out infinite;
+}
+
+.scan-line:nth-child(odd) {
+  animation-duration: 1.8s, 2.5s;
+}
+
+.scan-line:nth-child(even) {
+  animation-duration: 2.2s, 3.5s;
+}
+
+/* Scanlines horizontales pour l'effet CRT */
+.horizontal-scanlines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 1px,
+    rgba(201, 39, 49, 0.1) 1px,
+    rgba(201, 39, 49, 0.1) 2px
+  );
+  animation: scanlineMove 0.1s linear infinite;
+}
+
+/* Effet de phosphore (lueur résiduelle) */
+.phosphor-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 0%,
+    rgba(201, 39, 49, 0.05) 50%,
+    transparent 100%
+  );
+  animation: phosphorFlicker 0.5s ease-in-out infinite alternate;
+}
+
+/* Animations */
+@keyframes verticalScan {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  2% {
+    opacity: 0.9;
+  }
+  98% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+
+/* Animations simplifiées - une seule animation pour tous les traits */
+
+@keyframes scanlineMove {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(2px);
+  }
+}
+
+@keyframes phosphorFlicker {
+  0% {
+    opacity: 0.02;
+  }
+  100% {
+    opacity: 0.05;
+  }
+}
+
+@keyframes opacityFlicker {
+  0% {
+    opacity: 0.4;
+  }
+  25% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  75% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0.5;
+  }
+}
+
+/* Effet de distorsion occasionnelle */
+.crt-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(201, 39, 49, 0.05) 25%,
+    transparent 50%,
+    rgba(201, 39, 49, 0.05) 75%,
+    transparent 100%
+  );
+  animation: crtDistortion 4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes crtDistortion {
+  0%, 90%, 100% {
+    opacity: 0;
+    transform: scaleX(1);
+  }
+  5% {
+    opacity: 0.1;
+    transform: scaleX(1.01);
+  }
+  10% {
+    opacity: 0.05;
+    transform: scaleX(0.99);
+  }
+  15% {
+    opacity: 0.08;
+    transform: scaleX(1.005);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .scan-line {
+    width: 0.5px;
+    opacity: 0.2;
+  }
+  
+  .scan-line:nth-child(odd) {
+    opacity: 0.1;
+  }
+  
+  .scan-line:nth-child(even) {
+    opacity: 0.15;
+  }
+}
+
+@media (max-width: 480px) {
+  .scan-line {
+    width: 0.3px;
+    opacity: 0.15;
+  }
+}

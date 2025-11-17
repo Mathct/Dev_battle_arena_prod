@@ -1,0 +1,44 @@
+/* Reset et styles de base pour DEV BATTLE ARENA */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Orbitron', monospace;
+  background: #000;
+  color: #fff;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* Variables CSS pour le thème arcade */
+:root {
+  --arcade-red: #c92731;
+  --arcade-dark: #1a1a1a;
+  --arcade-bg: #000;
+  --arcade-text: #fff;
+  --arcade-glow: rgba(201, 39, 49, 0.5);
+}
+
+/* Reset des styles par défaut des boutons */
+button {
+  border: none;
+  outline: none;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* Reset des liens */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Styles pour les inputs */
+input {
+  font-family: inherit;
+  outline: none;
+}

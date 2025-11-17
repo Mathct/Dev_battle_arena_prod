@@ -1,0 +1,53 @@
+/* Footer pour DEV BATTLE ARENA */
+.game-footer {
+  background: #000;
+  padding: 15px 20px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-center {
+  display: flex;
+  align-items: center;
+}
+
+.footer-text {
+  color: #ccc;
+  font-family: 'Orbitron', monospace;
+  font-size: 0.8rem;
+  font-weight: 400;
+  letter-spacing: 1px;
+}
+
+
+/* Responsive */
+@media (max-width: 768px) {
+  .footer-content {
+    text-align: center;
+  }
+  
+  .footer-text {
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .game-footer {
+    padding: 10px 15px;
+  }
+  
+  .footer-text {
+    font-size: 0.6rem;
+  }
+}

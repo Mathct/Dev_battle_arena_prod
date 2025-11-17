@@ -1,0 +1,13 @@
+Instructions pour créer le fichier .env dans frontend/
+
+Créez un fichier nommé ".env" (sans guillemets) dans le dossier frontend/ avec ce contenu :
+
+VITE_API_URL=https://api.devbattlearena.webatif.fr
+
+IMPORTANT : 
+- Utiliser HTTPS (https://) car le frontend et le backend sont en HTTPS
+- Pas de slash à la fin de l'URL
+- Après avoir créé le fichier .env, vous DEVEZ rebuilder :
+  cd frontend
+  npm run build
+

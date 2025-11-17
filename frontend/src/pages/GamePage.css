@@ -1,0 +1,192 @@
+/* Styles pour le système de buzzer Battle Arena */
+.game-main-content {
+  height: calc(100vh - 136px);
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  color: white;
+  font-family: 'Orbitron', monospace;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  padding-bottom: 60px;
+}
+
+/* Section d'attente pour GamePage */
+.waiting-info {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  border-radius: 12px;
+  padding: 25px;
+  margin-bottom: 30px;
+  text-align: center;
+  box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3);
+}
+
+.waiting-info h2 {
+  color: white;
+  font-family: 'Orbitron', monospace;
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Section pour les joueurs sans équipe */
+.no-team-info {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  border-radius: 12px;
+  padding: 25px;
+  margin-bottom: 30px;
+  text-align: center;
+  box-shadow: 0 8px 25px rgba(231, 76, 60, 0.3);
+  max-width: 500px;
+}
+
+.no-team-info h2 {
+  color: white;
+  font-family: 'Orbitron', monospace;
+  font-size: 1.8rem;
+  margin-bottom: 15px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.no-team-info p {
+  color: white;
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+  opacity: 0.9;
+  line-height: 1.5;
+}
+
+
+.auth-required {
+  text-align: center;
+  padding: 40px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  margin: 20px 0;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.auth-required p {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  color: #ffffff;
+  opacity: 0.9;
+}
+
+.auth-button {
+  padding: 12px 25px;
+  background: linear-gradient(45deg, #4ecdc4, #44a08d);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1.1rem;
+  font-family: 'Orbitron', monospace;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
+}
+
+.auth-button:hover {
+  background: linear-gradient(45deg, #44a08d, #2c5530);
+  box-shadow: 0 6px 20px rgba(78, 205, 196, 0.4);
+}
+
+
+/* Titre du buzzer */
+.buzzer-title {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  color: #ffd700;
+  font-family: 'Orbitron', monospace;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+  text-align: center;
+}
+
+
+/* Styles pour l'affichage du buzzer */
+.buzzed-info {
+  background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+  padding: 25px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+  backdrop-filter: blur(5px);
+  margin-top: 20px;
+}
+
+.buzzed-player {
+  font-size: 1.5rem;
+  color: white;
+  font-weight: bold;
+  font-family: 'Orbitron', monospace;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  margin: 0;
+}
+
+
+.buzzer-button {
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+  color: white;
+  font-size: 1.8rem;
+  font-weight: bold;
+  font-family: 'Orbitron', monospace;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.buzzer-button:hover:not(:disabled) {
+  background: linear-gradient(45deg, #ee5a24, #d63031);
+  transform: scale(1.05);
+  box-shadow: 0 15px 40px rgba(255, 107, 107, 0.5);
+}
+
+.buzzer-button:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.buzzer-button.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 5px 15px rgba(255, 107, 107, 0.2);
+}
+
+
+
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .buzzer-title {
+    font-size: 2rem;
+  }
+  
+  .buzzer-button {
+    width: 200px;
+    height: 200px;
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .buzzer-button {
+    width: 180px;
+    height: 180px;
+    font-size: 1.3rem;
+  }
+  
+  .buzzer-title {
+    font-size: 1.8rem;
+  }
+}
