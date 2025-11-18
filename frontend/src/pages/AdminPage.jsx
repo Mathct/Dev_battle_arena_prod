@@ -170,8 +170,12 @@ function AdminPage() {
       console.log("🔄 Buzzer reset reçu (Admin)");
 
       // Recharger la liste des utilisateurs qui ont buzzé pour mettre à jour les verrous
+      // Ajouter un petit délai pour s'assurer que le DELETE dans la base de données est terminé
       const loadBuzzedUsers = async () => {
         try {
+           // Petit délai pour laisser le temps au DELETE de se terminer
+          await new Promise(resolve => setTimeout(resolve, 100));
+
           const response = await fetch(`${API_URL}/api/auth/buzzed-users`);
           if (response.ok) {
             const data = await response.json();

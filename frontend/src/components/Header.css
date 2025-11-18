@@ -26,10 +26,20 @@
   box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
   animation: buzzerPulse 0.5s ease-in-out;
   z-index: 101;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
 }
 
 .buzzer-notification-text {
   white-space: nowrap;
+}
+
+.buzzer-notification-team {
+  font-size: 0.9rem;
+  font-weight: 600;
+  opacity: 0.9;
 }
 
 @keyframes buzzerPulse {

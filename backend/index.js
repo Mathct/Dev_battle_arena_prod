@@ -305,7 +305,13 @@ io.on('connection', (socket) => {
       
       // Envoyer l'état actuel du buzzer à l'admin
       if (buzzedPlayer) {
-        socket.emit('playerBuzzed', buzzedPlayer);
+         // S'assurer que le nom de l'équipe est présent
+         const teamName = buzzedPlayer.teamName || await getPlayerTeamName(buzzedPlayer.name);
+         const buzzedPlayerWithTeam = {
+           ...buzzedPlayer,
+           teamName: teamName || null
+         };
+         socket.emit('playerBuzzed', buzzedPlayerWithTeam);
         console.log(`📡 État du buzzer envoyé à l'admin: ${buzzedPlayer.name} a buzzé`);
       }
       
@@ -355,12 +361,23 @@ io.on('connection', (socket) => {
       
       // Si quelqu'un a buzzé, envoyer l'état à tous les joueurs
       if (buzzedPlayer) {
-        io.emit('playerBuzzed', buzzedPlayer);
+        // S'assurer que le nom de l'équipe est présent
+        const teamName = buzzedPlayer.teamName || await getPlayerTeamName(buzzedPlayer.name);
+        const buzzedPlayerWithTeam = {
+          ...buzzedPlayer,
+          teamName: teamName || null
+        };
+        io.emit('playerBuzzed', buzzedPlayerWithTeam);
         
         // Si c'est le joueur qui a buzzé qui se reconnecte, forcer l'envoi de l'état
         if (buzzedPlayer.name === playerName) {
-          setTimeout(() => {
-            io.emit('playerBuzzed', buzzedPlayer);
+          setTimeout(async () => {
+            const teamNameRetry = buzzedPlayer.teamName || await getPlayerTeamName(buzzedPlayer.name);
+            const buzzedPlayerWithTeamRetry = {
+              ...buzzedPlayer,
+              teamName: teamNameRetry || null
+            };
+            io.emit('playerBuzzed', buzzedPlayerWithTeamRetry);
           }, 100);
         }
       }
@@ -398,8 +415,15 @@ io.on('connection', (socket) => {
         return;
       }
 
-      buzzedPlayer = player;
+      // Récupérer le nom de l'équipe du joueur
+      const teamName = await getPlayerTeamName(player.name);
+      
+      buzzedPlayer = {
+        ...player,
+        teamName: teamName || null
+      };
       player.buzzed = true;
+      player.teamName = teamName || null;
       players.set(player.name, player);
       
       console.log(`${player.name} a buzzé !`);
@@ -427,7 +451,7 @@ io.on('connection', (socket) => {
       console.log(`⏱️ Chrono serveur arrêté automatiquement après buzz de ${player.name}`);
       
       // Notifier tous les clients
-      io.emit('playerBuzzed', player);
+      io.emit('playerBuzzed', buzzedPlayer);
       io.emit('buzzersStateChanged', { enabled: false });
       
       const playersList = Array.from(players.values());
@@ -442,7 +466,7 @@ io.on('connection', (socket) => {
   });
 
   // Reset du buzzer
-  socket.on('resetBuzzer', () => {
+  socket.on('resetBuzzer', async () => {
     const lastBuzzed = buzzedPlayer ? { ...buzzedPlayer } : null;
     buzzedPlayer = null;
     // Reset tous les joueurs
@@ -452,7 +476,7 @@ io.on('connection', (socket) => {
     });
 
     // Débloquer le joueur qui avait buzzé (supprimer son entrée dans playerbuzz)
-    (async () => {
+    // ATTENTION: Attendre que le DELETE soit terminé avant d'émettre l'événement
       try {
         if (lastBuzzed && lastBuzzed.name) {
           const connection = await pool.getConnection();
@@ -469,8 +493,8 @@ io.on('connection', (socket) => {
       } catch (error) {
         console.error('❌ Erreur lors du déblocage du joueur après reset:', error);
       }
-    })();
     
+    // Émettre l'événement APRÈS que le DELETE soit terminé
     console.log(`Buzzer reset`);
     io.emit('buzzerReset');
     const playersList = Array.from(players.values());

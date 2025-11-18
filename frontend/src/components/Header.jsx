@@ -53,6 +53,11 @@ function Header({ user, onLogout, onReturnHome, isConnected, buzzerNotification,
           <span className="buzzer-notification-text">
             🔔 {buzzerNotification.name} a buzzé !
           </span>
+          {buzzerNotification.teamName && (
+            <span className="buzzer-notification-team">
+              {buzzerNotification.teamName === 'team1' ? 'Équipe 1' : 'Équipe 2'}
+            </span>
+          )}
         </div>
       )}
       
