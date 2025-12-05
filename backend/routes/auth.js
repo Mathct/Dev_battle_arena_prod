@@ -2,6 +2,8 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { pool } = require('../config/database');
+const { authenticate, requireAdmin } = require('../middleware/auth');
+
 
 const router = express.Router();
 
@@ -536,8 +538,8 @@ router.put('/scores/:teamName', async (req, res) => {
   }
 });
 
-// Route pour récupérer les utilisateurs qui ont buzzé
-router.get('/buzzed-users', async (req, res) => {
+// Route pour récupérer les utilisateurs qui ont buzzé (protégée - authentification requise)
+router.get('/buzzed-users', authenticate, async (req, res) => {
   try {
     const [rows] = await pool.execute(`
       SELECT DISTINCT u.id, u.username 
@@ -552,8 +554,8 @@ router.get('/buzzed-users', async (req, res) => {
   }
 });
 
-// Route pour vérifier si un joueur est bloqué
-router.get('/is-locked/:username', async (req, res) => {
+// Route pour vérifier si un joueur est bloqué (protégée - authentification requise)
+router.get('/is-locked/:username', authenticate, async (req, res) => {
   try {
     const { username } = req.params;
     
@@ -572,8 +574,8 @@ router.get('/is-locked/:username', async (req, res) => {
   }
 });
 
-// Route pour vider la table playerbuzz
-router.delete('/clear-buzzes', async (req, res) => {
+// Route pour vider la table playerbuzz (protégée - admin seulement)
+router.delete('/clear-buzzes', authenticate, requireAdmin, async (req, res) => {
   try {
     await pool.execute('DELETE FROM playerbuzz');
     res.json({ success: true, message: 'Table playerbuzz vidée avec succès' });
