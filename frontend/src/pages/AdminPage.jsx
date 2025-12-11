@@ -150,7 +150,14 @@ function AdminPage() {
       // Recharger la liste des utilisateurs qui ont buzzé
       const loadBuzzedUsers = async () => {
         try {
-          const response = await fetch(`${API_URL}/api/auth/buzzed-users`);
+          const token = localStorage.getItem('token');
+          if (!token) return;
+          
+          const response = await fetch(`${API_URL}/api/auth/buzzed-users`, {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
           if (response.ok) {
             const data = await response.json();
             setBuzzedUsers(data.buzzedUsers);
@@ -173,10 +180,17 @@ function AdminPage() {
       // Ajouter un petit délai pour s'assurer que le DELETE dans la base de données est terminé
       const loadBuzzedUsers = async () => {
         try {
+          const token = localStorage.getItem('token');
+          if (!token) return;
+          
            // Petit délai pour laisser le temps au DELETE de se terminer
           await new Promise(resolve => setTimeout(resolve, 100));
 
-          const response = await fetch(`${API_URL}/api/auth/buzzed-users`);
+          const response = await fetch(`${API_URL}/api/auth/buzzed-users`, {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
           if (response.ok) {
             const data = await response.json();
             setBuzzedUsers(data.buzzedUsers);
@@ -228,7 +242,14 @@ function AdminPage() {
   useEffect(() => {
     const loadGameState = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/game/state`);
+        const token = localStorage.getItem('token');
+        if (!token) return;
+        
+        const response = await fetch(`${API_URL}/api/game/state`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
         if (response.ok) {
           const data = await response.json();
           setGameState(data.gameState);
@@ -242,7 +263,14 @@ function AdminPage() {
     
     const loadBuzzedUsers = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/auth/buzzed-users`);
+        const token = localStorage.getItem('token');
+        if (!token) return;
+        
+        const response = await fetch(`${API_URL}/api/auth/buzzed-users`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
         if (response.ok) {
           const data = await response.json();
           setBuzzedUsers(data.buzzedUsers);
@@ -573,7 +601,14 @@ function AdminPage() {
         // Recharger la liste des joueurs qui ont buzzé pour mettre à jour l'état
         const loadBuzzedUsers = async () => {
           try {
-            const response = await fetch(`${API_URL}/api/auth/buzzed-users`);
+            const token = localStorage.getItem('token');
+            if (!token) return;
+            
+            const response = await fetch(`${API_URL}/api/auth/buzzed-users`, {
+              headers: {
+                'Authorization': `Bearer ${token}`
+              }
+            });
             if (response.ok) {
               const data = await response.json();
               setBuzzedUsers(data.buzzedUsers);
@@ -629,7 +664,14 @@ function AdminPage() {
       // Recharger la liste des joueurs qui ont buzzé
       const loadBuzzedUsers = async () => {
         try {
-          const response = await fetch(`${API_URL}/api/auth/buzzed-users`);
+          const token = localStorage.getItem('token');
+          if (!token) return;
+          
+          const response = await fetch(`${API_URL}/api/auth/buzzed-users`, {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
           if (response.ok) {
             const data = await response.json();
             setBuzzedUsers(data.buzzedUsers);
